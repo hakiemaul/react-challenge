@@ -10,10 +10,14 @@ class WeatherContent extends React.Component {
       city: '',
       humidity: '',
       temp: '',
-      weather: ''
+      weather: '',
+      weatherList: [],
+      cityInput: 'Jakarta'
     }
 
     this.getWeather = this.getWeather.bind(this)
+    this.cityChange = this.cityChange.bind(this)
+    this.findWeather = this.findWeather.bind(this)
   }
 
   getWeather (data) {
@@ -31,17 +35,52 @@ class WeatherContent extends React.Component {
       this.getWeather(response.data)
     })
     .catch(err => console.log(err))
+    axios.get('http://api.openweathermap.org/data/2.5/forecast?q=Jakarta&APPID=e8fa0052e0118e027517a03e5b1da02e')
+    .then(response => {
+      this.setState({
+        weatherList: response.data.list
+      })
+    })
+    .catch(err => console.log(err))
+  }
+
+  findWeather (e) {
+    e.preventDefault()
+    let newCity = this.state.cityInput
+    axios.get('http://api.openweathermap.org/data/2.5/weather?q=' + newCity + '&APPID=e8fa0052e0118e027517a03e5b1da02e')
+    .then(response => {
+      this.getWeather(response.data)
+      this.setState({
+        cityInput: ''
+      })
+    })
+    .catch(err => console.log(err))
+    axios.get('http://api.openweathermap.org/data/2.5/forecast?q=' + newCity + '&APPID=e8fa0052e0118e027517a03e5b1da02e')
+    .then(response => {
+      this.setState({
+        weatherList: response.data.list
+      })
+    })
+    .catch(err => console.log(err))
+  }
+
+  cityChange (data) {
+    this.setState({
+      cityInput: data
+    })
   }
 
   render () {
     return (
       <div>
-        <div className="columns">
+        <div className="columns" style={{margin: 40}}>
           <div className="field column is-offset-4 is-4">
+            <form onSubmit={this.findWeather}>
             <label className="label">Nama Kota</label>
             <p className="control">
-              <input className="input" type="text" placeholder="Masukkan nama kota.." />
+              <input className="input" type="text" placeholder="Masukkan nama kota.." onChange={(e) => this.cityChange(e.target.value)} value={this.state.cityInput}/>
             </p>
+            </form>
           </div>
         </div>
         <div className="columns">
@@ -67,7 +106,7 @@ class WeatherContent extends React.Component {
           </div>
         </div>
         <div className="columns">
-          <Forecasts />
+          <Forecasts weatherList={this.state.weatherList}/>
         </div>
       </div>
     )

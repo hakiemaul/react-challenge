@@ -26,9 +26,9 @@ class Navbar extends React.Component {
         </span>
 
         <div className="nav-right nav-menu">
-          <a className="nav-item">
+          <Link to="/" className="nav-item">
             Beranda
-          </a>
+          </Link>
         </div>
       </nav>
     )

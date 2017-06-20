@@ -11,8 +11,11 @@ class App extends React.Component {
       <BrowserRouter>
         <div>
           <Navbar />
-          <Route exact path='/' component={Header} />
-          <Route path='/weather' component={WeatherContent} />
+          <Switch>
+            <Route exact path='/' component={Header} />
+            <Route path='/weather' component={WeatherContent} />
+            <Route path='/weather/:id' component={WeatherContent} />
+          </Switch>
         </div>
       </BrowserRouter>
     )
