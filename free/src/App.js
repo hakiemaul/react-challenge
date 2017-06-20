@@ -1,24 +1,21 @@
 import React from 'react';
+import { BrowserRouter, Switch, Route } from 'react-router-dom'
 
 import Header from './components/Header'
+import Navbar from './components/Navbar'
 import WeatherContent from './components/WeatherContent'
 
 class App extends React.Component {
   render() {
     return (
-      <div>
-        <Header />
-        <div className="columns">
-          <div className="field column is-offset-4 is-4">
-            <label className="label">Nama Kota</label>
-            <p className="control">
-              <input className="input" type="text" placeholder="Text input" />
-            </p>
-          </div>
+      <BrowserRouter>
+        <div>
+          <Navbar />
+          <Route exact path='/' component={Header} />
+          <Route path='/weather' component={WeatherContent} />
         </div>
-        <WeatherContent />
-      </div>
-    );
+      </BrowserRouter>
+    )
   }
 }
 

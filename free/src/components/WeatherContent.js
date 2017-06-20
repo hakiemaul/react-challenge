@@ -37,6 +37,14 @@ class WeatherContent extends React.Component {
     return (
       <div>
         <div className="columns">
+          <div className="field column is-offset-4 is-4">
+            <label className="label">Nama Kota</label>
+            <p className="control">
+              <input className="input" type="text" placeholder="Masukkan nama kota.." />
+            </p>
+          </div>
+        </div>
+        <div className="columns">
           <h1 className="column is-offset-one-quarter is-one-quarter"> Cuaca hari ini </h1>
           <div className="card column is-one-quarter">
             <div className="card-content">
