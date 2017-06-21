@@ -9,10 +9,7 @@ class EarthquakeData extends React.Component {
   componentDidMount () {
     let to = this.props.match.params.to
     let from = this.props.match.params.from
-    axios.get('https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=' + from + '&endtime=' + to + '&minmagnitude=5')
-    .then(response => {
-      this.props.getEarthquakes(response.data.features)
-    })
+    this.props.getEarthquakes(from, to)
   }
 
   render () {
@@ -47,7 +44,7 @@ class EarthquakeData extends React.Component {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getEarthquakes: (earthquakes) => dispatch(getEarthquakes(earthquakes))
+    getEarthquakes: (from, to) => dispatch(getEarthquakes(from, to))
   }
 }
 

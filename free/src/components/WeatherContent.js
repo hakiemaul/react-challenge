@@ -17,34 +17,18 @@ class WeatherContent extends React.Component {
   }
 
   componentDidMount () {
-    axios.get('http://api.openweathermap.org/data/2.5/weather?q=Jakarta&APPID=e8fa0052e0118e027517a03e5b1da02e')
-    .then(response => {
-      this.props.getWeather(response.data)
-    })
-    .catch(err => console.log(err))
-    axios.get('http://api.openweathermap.org/data/2.5/forecast?q=Jakarta&APPID=e8fa0052e0118e027517a03e5b1da02e')
-    .then(response => {
-      this.props.getForecasts(response.data.list)
-    })
-    .catch(err => console.log(err))
+    this.props.getWeather()
+    this.props.getForecasts()
   }
 
   findWeather (e) {
     e.preventDefault()
     let newCity = this.state.cityInput
-    axios.get('http://api.openweathermap.org/data/2.5/weather?q=' + newCity + '&APPID=e8fa0052e0118e027517a03e5b1da02e')
-    .then(response => {
-      this.props.findCurrent(response.data)
+    this.props.findCurrent(newCity)
+    this.props.findForecasts(newCity)
+    this.setState({
+      cityInput: ''
     })
-    .catch(err => console.log(err))
-    axios.get('http://api.openweathermap.org/data/2.5/forecast?q=' + newCity + '&APPID=e8fa0052e0118e027517a03e5b1da02e')
-    .then(response => {
-      this.props.findForecasts(response.data.list)
-      this.setState({
-        cityInput: ''
-      })
-    })
-    .catch(err => console.log(err))
   }
 
   cityChange (data) {
@@ -105,10 +89,10 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getWeather: (weather) => dispatch(getCurrentWeather(weather)),
-    getForecasts: (weathers) => dispatch(getForecasts(weathers)),
-    findCurrent: (weather) => dispatch(findCityCurrent(weather)),
-    findForecasts: (weathers) => dispatch(findCityForecasts(weathers))
+    getWeather: () => dispatch(getCurrentWeather()),
+    getForecasts: () => dispatch(getForecasts()),
+    findCurrent: (city) => dispatch(findCityCurrent(city)),
+    findForecasts: (city) => dispatch(findCityForecasts(city))
   }
 }
 
