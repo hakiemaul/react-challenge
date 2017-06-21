@@ -4,7 +4,7 @@ class Earthquake extends React.Component {
   render () {
     const { earth } = this.props
     const row = earth.map((data, index) =>
-      <tr>
+      <tr key={index}>
         <td>{index + 1}</td>
         <td>{data.properties.title}</td>
         <td>{data.properties.mag}</td>

@@ -1,11 +1,13 @@
 import React from 'react'
 import axios from 'axios'
+import { connect } from 'react-redux'
 
+import { getCurrentWeather } from '../actions'
 import Forecasts from './Forecasts'
 
 class WeatherContent extends React.Component {
-  constructor () {
-    super()
+  constructor (props) {
+    super(props)
     this.state = {
       city: '',
       humidity: '',
@@ -33,6 +35,8 @@ class WeatherContent extends React.Component {
     axios.get('http://api.openweathermap.org/data/2.5/weather?q=Jakarta&APPID=e8fa0052e0118e027517a03e5b1da02e')
     .then(response => {
       this.getWeather(response.data)
+      this.props.getWeather(response.data)
+      console.log(this.props);
     })
     .catch(err => console.log(err))
     axios.get('http://api.openweathermap.org/data/2.5/forecast?q=Jakarta&APPID=e8fa0052e0118e027517a03e5b1da02e')
@@ -113,4 +117,16 @@ class WeatherContent extends React.Component {
   }
 }
 
-export default WeatherContent
+const mapStateToProps = (state) => {
+  return {
+    currentWeather: state.weather.currentWeather
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getWeather: (weather) => dispatch(getCurrentWeather(weather))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(WeatherContent)
