@@ -2,48 +2,29 @@ import React from 'react'
 import axios from 'axios'
 import { connect } from 'react-redux'
 
-import { getCurrentWeather } from '../actions'
+import { getCurrentWeather, getForecasts, findCityCurrent, findCityForecasts } from '../actions'
 import Forecasts from './Forecasts'
 
 class WeatherContent extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      city: '',
-      humidity: '',
-      temp: '',
-      weather: '',
-      weatherList: [],
       cityInput: 'Jakarta'
     }
 
-    this.getWeather = this.getWeather.bind(this)
     this.cityChange = this.cityChange.bind(this)
     this.findWeather = this.findWeather.bind(this)
-  }
-
-  getWeather (data) {
-    this.setState({
-      city: data.name,
-      humidity: data.main.humidity,
-      temp: Math.round(data.main.temp - 273),
-      weather: data.weather[0].description
-    })
   }
 
   componentDidMount () {
     axios.get('http://api.openweathermap.org/data/2.5/weather?q=Jakarta&APPID=e8fa0052e0118e027517a03e5b1da02e')
     .then(response => {
-      this.getWeather(response.data)
       this.props.getWeather(response.data)
-      console.log(this.props);
     })
     .catch(err => console.log(err))
     axios.get('http://api.openweathermap.org/data/2.5/forecast?q=Jakarta&APPID=e8fa0052e0118e027517a03e5b1da02e')
     .then(response => {
-      this.setState({
-        weatherList: response.data.list
-      })
+      this.props.getForecasts(response.data.list)
     })
     .catch(err => console.log(err))
   }
@@ -53,16 +34,14 @@ class WeatherContent extends React.Component {
     let newCity = this.state.cityInput
     axios.get('http://api.openweathermap.org/data/2.5/weather?q=' + newCity + '&APPID=e8fa0052e0118e027517a03e5b1da02e')
     .then(response => {
-      this.getWeather(response.data)
-      this.setState({
-        cityInput: ''
-      })
+      this.props.findCurrent(response.data)
     })
     .catch(err => console.log(err))
     axios.get('http://api.openweathermap.org/data/2.5/forecast?q=' + newCity + '&APPID=e8fa0052e0118e027517a03e5b1da02e')
     .then(response => {
+      this.props.findForecasts(response.data.list)
       this.setState({
-        weatherList: response.data.list
+        cityInput: ''
       })
     })
     .catch(err => console.log(err))
@@ -75,6 +54,7 @@ class WeatherContent extends React.Component {
   }
 
   render () {
+    const { currentWeather } = this.props
     return (
       <div>
         <div className="columns" style={{margin: 40}}>
@@ -92,14 +72,14 @@ class WeatherContent extends React.Component {
           <div className="card column is-one-quarter">
             <div className="card-content">
               <p className="title">
-                {this.state.city}
+                {currentWeather.name}
               </p>
               <p className="subtitle">
-                Kelembaban : {this.state.humidity} %
-                Temperatur : {this.state.temp} ℃
+                Kelembaban : {currentWeather.humidity} %
+                Temperatur : {currentWeather.temp} ℃
               </p>
               <p className="subtitle">
-               Summary : {this.state.weather}
+               Summary : {currentWeather.description}
               </p>
             </div>
             <footer className="card-footer">
@@ -110,7 +90,7 @@ class WeatherContent extends React.Component {
           </div>
         </div>
         <div className="columns">
-          <Forecasts weatherList={this.state.weatherList}/>
+          <Forecasts />
         </div>
       </div>
     )
@@ -125,7 +105,10 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getWeather: (weather) => dispatch(getCurrentWeather(weather))
+    getWeather: (weather) => dispatch(getCurrentWeather(weather)),
+    getForecasts: (weathers) => dispatch(getForecasts(weathers)),
+    findCurrent: (weather) => dispatch(findCityCurrent(weather)),
+    findForecasts: (weathers) => dispatch(findCityForecasts(weathers))
   }
 }
 
