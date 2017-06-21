@@ -13,7 +13,7 @@ export const getCurrentWeather = () => {
   }
 }
 
-export const getForecasts = (weathers) => {
+export const getForecasts = () => {
   return dispatch => {
     axios.get('http://api.openweathermap.org/data/2.5/forecast?q=Jakarta&APPID=e8fa0052e0118e027517a03e5b1da02e')
     .then(response => {
