@@ -11,9 +11,9 @@ class Forecasts extends React.Component {
         {this.props.forecastWeathers.map((weather, index) => (
           (weather.dt_txt.includes("06:00:00")) ? <ForecastItem
                                                     weather={weather.weather[0].description}
-                                                    date={weather.dt_txt}
+                                                    date={new Date(weather.dt_txt).toDateString()}
                                                     humidity={weather.main.humidity}
-                                                    temp={weather.main.temp}
+                                                    temp={Math.round(weather.main.temp - 273)}
                                                     key={index}
                                                   /> : ''
         ))}
