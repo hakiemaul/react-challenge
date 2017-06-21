@@ -1,24 +1,17 @@
 import React from 'react'
 import axios from 'axios'
+import { connect } from 'react-redux'
 
 import Earthquake from './Earthquake'
+import { getEarthquakes } from '../actions'
 
 class EarthquakeData extends React.Component {
-  constructor () {
-    super ()
-    this.state = {
-      earthquakes: []
-    }
-  }
-
   componentDidMount () {
     let to = this.props.match.params.to
     let from = this.props.match.params.from
     axios.get('https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=' + from + '&endtime=' + to + '&minmagnitude=5')
     .then(response => {
-      this.setState({
-        earthquakes: response.data.features
-      })
+      this.props.getEarthquakes(response.data.features)
     })
   }
 
@@ -42,7 +35,7 @@ class EarthquakeData extends React.Component {
             <th>Waktu Kejadian</th>
           </tr>
         </thead>
-        <Earthquake earth={this.state.earthquakes} />
+        <Earthquake />
         <tbody>
         </tbody>
       </table>
@@ -52,4 +45,10 @@ class EarthquakeData extends React.Component {
   }
 }
 
-export default EarthquakeData
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getEarthquakes: (earthquakes) => dispatch(getEarthquakes(earthquakes))
+  }
+}
+
+export default connect(null, mapDispatchToProps)(EarthquakeData)

@@ -1,9 +1,10 @@
 import React from 'react'
+import { connect } from 'react-redux'
 
 class Earthquake extends React.Component {
   render () {
-    const { earth } = this.props
-    const row = earth.map((data, index) =>
+    const { earthquakes } = this.props
+    const row = earthquakes.map((data, index) =>
       <tr key={index}>
         <td>{index + 1}</td>
         <td>{data.properties.title}</td>
@@ -19,4 +20,10 @@ class Earthquake extends React.Component {
   }
 }
 
-export default Earthquake
+const mapStateToProps = (state) => {
+  return {
+    earthquakes: state.earthquake.earthquakeData
+  }
+}
+
+export default connect(mapStateToProps, null)(Earthquake)

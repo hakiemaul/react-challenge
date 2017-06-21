@@ -25,3 +25,10 @@ export const findCityForecasts = (weathers) => {
     payload: weathers
   }
 }
+
+export const getEarthquakes = (earthquake) => {
+  return {
+    type: 'GET_EARTHQUAKES',
+    payload: earthquake
+  }
+}
